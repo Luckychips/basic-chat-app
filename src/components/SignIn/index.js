@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { withStyles, Button, TextField } from '@material-ui/core';
 
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import * as PropTypes from "prop-types";
 
 const SignInPage = () => (
     <div>
@@ -15,6 +17,12 @@ const SignInPage = () => (
         <SignUpLink />
     </div>
 );
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    }
+});
 
 const INITIAL_STATE = {
     email: '',
@@ -50,29 +58,46 @@ class SignInFormBase extends Component {
     };
 
     render() {
+        const { classes } = this.props;
         const { email, password, error } = this.state;
 
         const isInvalid = password === '' || email === '';
 
         return (
             <form onSubmit={this.onSubmit}>
-                <input
+                <TextField
+                    id="sign-in-email-field"
+                    label="Email"
                     name="email"
-                    value={email}
-                    onChange={this.onChange}
                     type="text"
+                    value={email}
                     placeholder="Email Address"
-                />
-                <input
-                    name="password"
-                    value={password}
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
                     onChange={this.onChange}
-                    type="password"
-                    placeholder="Password"
                 />
-                <button disabled={isInvalid} type="submit">
-                    Sign In
-                </button>
+
+                <TextField
+                    id="sign-in-password-field"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={password}
+                    placeholder="Password"
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onChange={this.onChange}
+                />
+
+                <Button variant="outlined" color="primary" size="small" className={classes.button} disabled={isInvalid} type="submit">Sign In</Button>
 
                 {error && <p>{error.message}</p>}
             </form>
@@ -80,11 +105,12 @@ class SignInFormBase extends Component {
     }
 }
 
-const SignInForm = compose(
-    withRouter,
-    withFirebase,
-)(SignInFormBase);
+SignInFormBase.propTypes = {
+    classes: PropTypes.object.isRequired
+};
 
-export default SignInPage;
+const SignInForm = compose(withRouter, withFirebase)(withStyles(styles)(SignInFormBase));
 
 export { SignInForm };
+
+export default SignInPage;
