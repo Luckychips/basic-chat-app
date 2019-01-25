@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
 
 import { withFirebase } from '../Firebase';
+import {Button, TextField, withStyles} from "@material-ui/core";
+
+const styles = theme => ({
+    container: {
+        'display': 'flex',
+        'flexWrap': 'wrap',
+        'max-width': 450,
+        'margin': '0 auto'
+    },
+    button: {
+        'width': '100%',
+        'margin-top': 20
+    }
+});
 
 const INITIAL_STATE = {
     passwordOne: '',
@@ -35,30 +49,48 @@ class PasswordChangeForm extends Component {
     };
 
     render() {
+        const { classes } = this.props;
         const { passwordOne, passwordTwo, error } = this.state;
 
         const isInvalid =
             passwordOne !== passwordTwo || passwordOne === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
-                <input
+            <form onSubmit={this.onSubmit} className={classes.container}>
+                <TextField
+                    id="password-change-password-one-field"
+                    label="New Password"
                     name="passwordOne"
+                    type="password"
                     value={passwordOne}
-                    onChange={this.onChange}
-                    type="password"
                     placeholder="New Password"
-                />
-                <input
-                    name="passwordTwo"
-                    value={passwordTwo}
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
                     onChange={this.onChange}
-                    type="password"
-                    placeholder="Confirm New Password"
                 />
-                <button disabled={isInvalid} type="submit">
+                <TextField
+                    id="password-change-password-two-field"
+                    label="Confirm New Password"
+                    name="passwordTwo"
+                    type="password"
+                    value={passwordTwo}
+                    placeholder="Confirm New Password"
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onChange={this.onChange}
+                />
+                <Button variant="outlined" color="primary" className={classes.button} disabled={isInvalid} type="submit">
                     Reset My Password
-                </button>
+                </Button>
+
 
                 {error && <p>{error.message}</p>}
             </form>
@@ -66,4 +98,4 @@ class PasswordChangeForm extends Component {
     }
 }
 
-export default withFirebase(PasswordChangeForm);
+export default withFirebase(withStyles(styles)(PasswordChangeForm));
