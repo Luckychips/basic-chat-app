@@ -4,22 +4,42 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase/context';
 import * as ROUTES from '../../constants/routes';
-import {withStyles} from "@material-ui/core";
+import {Button, TextField, withStyles} from "@material-ui/core";
 
 const styles = theme => ({
     SignUpLink: {
         'max-width': 450,
         'margin': '0 auto',
         'padding': '5px 0'
+    },
+    container: {
+        'display': 'flex',
+        'flexWrap': 'wrap',
+        'max-width': 450,
+        'margin': '0 auto'
+    },
+    title: {
+        'text-align': 'center',
+        'font-weight': 100
+    },
+    button: {
+        'width': '100%',
+        'margin-top': 20
     }
 });
 
-const SignUpPage = () => (
-    <div>
-        <h1>SignUp</h1>
-        <SignUpForm />
-    </div>
-);
+class SignUpPage extends Component {
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div>
+                <h1 className={classes.title}>Sign Up</h1>
+                <SignUpForm />
+            </div>
+        );
+    }
+}
 
 class SignUpLinkBase extends Component {
     render() {
@@ -86,6 +106,8 @@ class SignUpFormBase extends Component {
             error,
         } = this.state;
 
+        const { classes } = this.props;
+
         const isInvalid =
             passwordOne !== passwordTwo ||
             passwordOne === '' ||
@@ -93,38 +115,71 @@ class SignUpFormBase extends Component {
             username === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
-                <input
+            <form onSubmit={this.onSubmit} className={classes.container}>
+                <TextField
+                    id="sign-up-username-field"
+                    label="Full Name"
                     name="username"
+                    type="text"
                     value={username}
-                    onChange={this.onChange}
-                    type="text"
                     placeholder="Full Name"
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onChange={this.onChange}
                 />
-                <input
+                <TextField
+                    id="sign-up-email-field"
+                    label="Email Address"
                     name="email"
-                    value={email}
-                    onChange={this.onChange}
                     type="text"
+                    value={email}
                     placeholder="Email Address"
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onChange={this.onChange}
                 />
-                <input
+                <TextField
+                    id="sign-up-password-one-field"
+                    label="Password"
                     name="passwordOne"
+                    type="password"
                     value={passwordOne}
-                    onChange={this.onChange}
-                    type="password"
                     placeholder="Password"
-                />
-                <input
-                    name="passwordTwo"
-                    value={passwordTwo}
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
                     onChange={this.onChange}
-                    type="password"
-                    placeholder="Confirm Password"
                 />
-                <button disabled={isInvalid} type="submit">
+                <TextField
+                    id="sign-up-password-two-field"
+                    label="Confirm Password"
+                    name="passwordTwo"
+                    type="password"
+                    value={passwordTwo}
+                    placeholder="Confirm Password"
+                    helperText=""
+                    fullWidth
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onChange={this.onChange}
+                />
+
+                <Button variant="outlined" color="primary" className={classes.button} disabled={isInvalid} type="submit">
                     Sign Up
-                </button>
+                </Button>
 
                 {error && <p>{error.message}</p>}
             </form>
@@ -132,8 +187,8 @@ class SignUpFormBase extends Component {
     }
 }
 
-const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
+const SignUpForm = compose(withRouter, withFirebase)(withStyles(styles)(SignUpFormBase));
 const SignUpLink = withStyles(styles)(SignUpLinkBase);
 
 export { SignUpForm, SignUpLink };
-export default SignUpPage;
+export default withStyles(styles)(SignUpPage);
