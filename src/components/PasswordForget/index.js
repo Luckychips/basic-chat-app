@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { withStyles } from "@material-ui/core";
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+
+const styles = theme => ({
+    PasswordForgetLink: {
+        'max-width': 450,
+        'margin': '0 auto',
+        'padding': '10px 0 5px 0'
+    }
+});
 
 const PasswordForgetPage = () => (
     <div>
@@ -10,6 +19,18 @@ const PasswordForgetPage = () => (
         <PasswordForgetForm />
     </div>
 );
+
+class PasswordForgetLinkBase extends Component {
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <p className={classes.PasswordForgetLink}>
+                <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
+            </p>
+        );
+    }
+}
 
 const INITIAL_STATE = {
     email: '',
@@ -66,14 +87,8 @@ class PasswordForgetFormBase extends Component {
     }
 }
 
-const PasswordForgetLink = () => (
-    <p>
-        <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
-    </p>
-);
-
-export default PasswordForgetPage;
-
 const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
+const PasswordForgetLink = withStyles(styles)(PasswordForgetLinkBase);
 
 export { PasswordForgetForm, PasswordForgetLink };
+export default PasswordForgetPage;

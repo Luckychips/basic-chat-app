@@ -4,6 +4,15 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase/context';
 import * as ROUTES from '../../constants/routes';
+import {withStyles} from "@material-ui/core";
+
+const styles = theme => ({
+    SignUpLink: {
+        'max-width': 450,
+        'margin': '0 auto',
+        'padding': '5px 0'
+    }
+});
 
 const SignUpPage = () => (
     <div>
@@ -11,6 +20,18 @@ const SignUpPage = () => (
         <SignUpForm />
     </div>
 );
+
+class SignUpLinkBase extends Component {
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <p className={classes.SignUpLink}>
+                Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+            </p>
+        );
+    }
+}
 
 const INITIAL_STATE = {
     username: '',
@@ -111,14 +132,8 @@ class SignUpFormBase extends Component {
     }
 }
 
-const SignUpLink = () => (
-    <p>
-        Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-    </p>
-);
-
 const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
-
-export default SignUpPage;
+const SignUpLink = withStyles(styles)(SignUpLinkBase);
 
 export { SignUpForm, SignUpLink };
+export default SignUpPage;

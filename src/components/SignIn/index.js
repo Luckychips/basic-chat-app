@@ -9,20 +9,42 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import * as PropTypes from "prop-types";
 
-const SignInPage = () => (
-    <div>
-        <h1>SignIn</h1>
-        <SignInForm />
-        <PasswordForgetLink />
-        <SignUpLink />
-    </div>
-);
-
 const styles = theme => ({
+    container: {
+        'display': 'flex',
+        'flexWrap': 'wrap',
+        'max-width': 450,
+        'margin': '0 auto'
+    },
+    title: {
+        'text-align': 'center',
+        'font-weight': 100
+    },
     button: {
-        margin: theme.spacing.unit
+        'width': '100%',
+        'margin-top': 20
     }
 });
+
+class SignInPage extends Component {
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div>
+                <h1 className={classes.title}>Sign In to</h1>
+                <SignInForm />
+                <PasswordForgetLink />
+                <SignUpLink />
+            </div>
+        );
+    }
+}
+
+SignInPage.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
 
 const INITIAL_STATE = {
     email: '',
@@ -64,7 +86,7 @@ class SignInFormBase extends Component {
         const isInvalid = password === '' || email === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit} className={classes.container}>
                 <TextField
                     id="sign-in-email-field"
                     label="Email"
@@ -97,7 +119,7 @@ class SignInFormBase extends Component {
                     onChange={this.onChange}
                 />
 
-                <Button variant="outlined" color="primary" size="small" className={classes.button} disabled={isInvalid} type="submit">Sign In</Button>
+                <Button variant="outlined" color="primary" className={classes.button} disabled={isInvalid} type="submit">Sign In</Button>
 
                 {error && <p>{error.message}</p>}
             </form>
@@ -112,5 +134,4 @@ SignInFormBase.propTypes = {
 const SignInForm = compose(withRouter, withFirebase)(withStyles(styles)(SignInFormBase));
 
 export { SignInForm };
-
-export default SignInPage;
+export default withStyles(styles)(SignInPage);
